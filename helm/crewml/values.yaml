@@ -1,0 +1,5 @@
+global:
+  image: { registry: ghcr.io/YOUR_GH_ORG, tag: v1.0.0, pullPolicy: IfNotPresent }
+  observability: { serviceMonitor: { enabled: true, metricsPath: /metrics } }
+services:
+  - { name: flights-svc, port: 8000, env: {} }

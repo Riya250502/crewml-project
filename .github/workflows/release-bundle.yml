@@ -1,0 +1,17 @@
+name: release-bundle
+on: { workflow_dispatch: { inputs: { version: { description: '1.0.0', required: true } } } }
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - run: mkdir -p dist && helm package helm/crewml -d dist
+      - run: cd dist && sha256sum * > crewml-helm-manifest.sha256.txt && ls -1 | jq -R . | jq -s . > files.json && echo '{"version":"1.0.0","files":'$(cat files.json)'}' > crewml-helm-manifest.json
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          files: |
+            dist/*.tgz
+            dist/crewml-helm-manifest.json
+            dist/crewml-helm-manifest.sha256.txt

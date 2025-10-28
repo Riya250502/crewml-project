@@ -1,0 +1,7 @@
+name: setup-environments
+on: { workflow_dispatch: {} }
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "configure dev/prod via REST in your fork (requires ENV_ADMIN_TOKEN)"

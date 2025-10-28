@@ -1,0 +1,12 @@
+{{- if .Values.global.observability.serviceMonitor.enabled }}
+{{- $path := .Values.global.observability.serviceMonitor.metricsPath | default "/metrics" }}
+{{- range $svc := .Values.services }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata: { name: {{ $svc.name }} }
+spec:
+  selector: { matchLabels: { app: {{ $svc.name }} } }
+  endpoints: [ { port: http, path: {{ $path | quote }} } ]
+{{- end }}
+{{- end }}

@@ -1,0 +1,25 @@
+{{- $g := .Values.global -}}
+{{- range $svc := .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata: { name: {{ $svc.name }} }
+spec:
+  selector: { app: {{ $svc.name }} }
+  ports: [ { name: http, port: {{ $svc.port }}, targetPort: {{ $svc.port }} } ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: {{ $svc.name }} }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: {{ $svc.name }} } }
+  template:
+    metadata: { labels: { app: {{ $svc.name }} } }
+    spec:
+      containers:
+        - name: {{ $svc.name }}
+          image: "{{ $g.image.registry }}/{{ $svc.name }}:{{ $g.image.tag }}"
+          imagePullPolicy: "{{ $g.image.pullPolicy }}"
+          ports: [ { containerPort: {{ $svc.port }} } ]
+{{- end }}

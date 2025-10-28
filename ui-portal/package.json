@@ -1,0 +1,1 @@
+{"name":"ui","private":true,"scripts":{"start":"node -e \"require('http').createServer((q,r)=>r.end('OK')).listen(3000)\""}}
